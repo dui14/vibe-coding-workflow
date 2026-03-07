@@ -1,0 +1,260 @@
+Bạn là **Principal Software Architect** chịu trách nhiệm thiết kế kiến trúc cho một hệ thống production.
+Mục tiêu của bạn là tạo **AI-first architecture documentation** để các AI coding agents có thể phát triển hệ thống.
+
+---
+
+PROJECT STRUCTURE
+
+Project đã có cấu trúc sau:
+
+your-project/
+
+.github/
+copilot-instructions.md
+
+CLAUDE.md
+AGENTS.md
+
+ai-context/
+00-role.md
+01-product.md
+02-business-rules.md
+03-system-architecture.md
+04-database-design.md
+05-tech-stack.md
+06-api-contract.md
+07-security-model.md
+08-scaling-strategy.md
+09-coding-standards.md
+10-definition-of-done.md
+
+workflow/
+feature.md
+bug.md
+chore.md
+ticket-template.md
+code-review.md
+release-process.md
+deployment.md
+
+api/
+new-endpoint.md
+update-endpoint.md
+deprecate-endpoint.md
+api-testing.md
+
+testing/
+backend-test.md
+frontend-test.md
+e2e-test.md
+
+agents/
+architect.md
+reviewer.md
+security.md
+performance.md
+
+skills/
+refactoring.md
+performance-optimization.md
+debugging.md
+
+src/
+
+---
+
+NHIỆM VỤ
+
+Dựa trên **PROJECT IDEA** bên dưới, hãy thiết kế toàn bộ nội dung cho các file trong thư mục:
+
+ai-context/
+
+---
+
+PROJECT IDEA
+
+Tên sản phẩm:
+
+[điền]
+
+Loại hệ thống:
+
+[ví dụ: SaaS / Web App / API Platform / AI Tool]
+
+Mục tiêu sản phẩm:
+
+[điền]
+
+Các tính năng chính:
+
+feature 1:
+[điền]
+
+feature 2:
+[điền]
+
+feature 3:
+[điền]
+
+feature 4:
+[điền]
+
+feature 5:
+[điền]
+
+---
+
+Người dùng của hệ thống:
+
+[ví dụ: trader / developer / admin / user]
+
+---
+
+Luồng sử dụng chính:
+
+[điền]
+
+---
+
+UI Layout (nếu có):
+
+[điền]
+
+---
+
+Database entities (nếu có):
+
+[điền hoặc để AI tự thiết kế]
+
+---
+
+Yêu cầu hệ thống:
+
+* scalable
+* secure
+* modular
+* production ready
+* API driven
+
+---
+
+Tech stack gợi ý (AI có thể thay đổi nếu cần):
+
+Frontend:
+
+[điền hoặc để AI chọn]
+
+Backend:
+
+[điền hoặc để AI chọn]
+
+Database:
+
+[điền hoặc để AI chọn]
+
+Cache:
+
+[điền]
+
+Queue:
+
+[điền]
+
+Auth:
+
+[điền]
+
+---
+
+YÊU CẦU KIẾN TRÚC
+
+Hệ thống phải theo layered architecture:
+
+Domain
+Application
+Infrastructure
+Presentation
+
+Frontend và Backend tách riêng.
+
+Hệ thống phải hỗ trợ:
+
+WebSocket
+Queue
+Worker
+Cron jobs
+Caching
+Horizontal Scaling
+
+---
+
+YÊU CẦU DOCUMENTATION
+
+Bạn phải tạo nội dung cho toàn bộ file:
+
+ai-context/
+
+00-role.md
+01-product.md
+02-business-rules.md
+03-system-architecture.md
+04-database-design.md
+05-tech-stack.md
+06-api-contract.md
+07-security-model.md
+08-scaling-strategy.md
+09-coding-standards.md
+10-definition-of-done.md
+
+---
+
+Mỗi file phải:
+
+* viết bằng tiếng Việt
+* có heading rõ ràng
+* có cấu trúc logic
+* production ready
+* đủ chi tiết để AI implement
+
+---
+
+OUTPUT FORMAT
+
+Xuất theo format:
+
+# filename.md
+
+nội dung
+
+---
+
+THỨ TỰ OUTPUT
+
+00-role.md
+01-product.md
+02-business-rules.md
+03-system-architecture.md
+04-database-design.md
+05-tech-stack.md
+06-api-contract.md
+07-security-model.md
+08-scaling-strategy.md
+09-coding-standards.md
+10-definition-of-done.md
+
+---
+
+QUY TẮC
+
+* Không bỏ sót file
+* Database phải có schema tables
+* API contract phải có endpoint list
+* Architecture phải có diagram (markdown)
+* Security phải có encryption strategy
+* Scaling phải hỗ trợ tối thiểu 10k users
+
+---
+
+Mục tiêu cuối cùng:
+
+Tạo **AI-first architecture documentation** để AI agents có thể build toàn bộ hệ thống.
