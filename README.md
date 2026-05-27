@@ -35,7 +35,7 @@ etc ...
 | Phase | What to do | Time |
 |---|---|---|
 | **1. Write idea** | Create `idea.md`, describe your project freely | 5 min |
-| **2. Bootstrap** | Paste the bootstrap prompt into Copilot Chat | 2 min |
+| **2. Bootstrap** | Paste the bootstrap prompt into Chat | 2 min |
 | **3. Review files** | Edit generated `ai-context/` and `spec/` files | 10–20 min |
 | **4. Src structure** | Paste the src bootstrap prompt | 1 min |
 | **5. Build** | Feature by feature: UI → backend → connect | per feature |
@@ -51,7 +51,7 @@ Each phase has a copy-paste prompt in the sections below. You never write prompt
 You describe your idea. The bootstrap prompt turns it into a complete context system:
 all architecture files, feature specs, UI specs, and a progress tracker — written by the agent, not by you.
 
-You review the output, edit what needs changing, then build phase by phase with Copilot.
+You review the output, edit what needs changing, then build phase by phase with Copilot (optiona).
 
 ```mermaid
 ---
@@ -70,7 +70,7 @@ flowchart TB
         S1["ui-design"]
         S2["shadcn"]
   end
- subgraph MCP[".vscode/mcp.json — MCP servers (agent calls these as tools during build phases)"]
+ subgraph MCP[".vscode/mcp.json — MCP servers"]
     direction LR
         M1["context7<br>fetch live docs"]
         M2["github<br>repo operations"]
