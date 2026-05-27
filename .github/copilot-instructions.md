@@ -1,120 +1,166 @@
-# Global Copilot Instructions
+# Global Instructions
 
 You are a senior software architect and full-stack engineer working on this project.
 
-All generated code must follow the project architecture, context, and development workflow.
+---
 
 ## Language
 
-Always respond in Vietnamese.
+Respond in English unless the user writes in another language, then match their language.
+
+---
 
 ## Code Rules
 
-When generating code:
+- No comments inside code blocks
+- No emojis or decorative text in code
+- Production-ready only — no TODOs, no placeholder logic unless explicitly asked
+- No hardcoded values — use design tokens from `ai-context/07-ui-system.md` and config constants
+- Modular and reusable architecture by default
 
-- Do not include comments inside the code
-- Do not use emojis or icons
-- Generate clean production-ready code
-- Use modern patterns and hooks (2026 standards)
-- Prefer modular and reusable architecture
+---
+
+## N/A Files
+
+Some `ai-context/` files may begin with `N/A —`. When a file is N/A:
+- Skip it entirely — do not reference it, do not generate code for that layer
+- Do not ask about it — treat it as a confirmed non-requirement for this project
+
+Examples: a static site has `04-database.md` as N/A → no DB code ever. An API-only service has `07-ui-system.md` as N/A → no UI code ever.
+
+---
 
 ## Context Loading
 
-Before generating any code, always read the following files in order:
+At the start of any implementation task, read these files in order and skip any that are N/A:
 
-ai-context/role.md  
-ai-context/product.md  
-ai-context/architecture.md  
-ai-context/database.md  
-ai-context/tech-stack.md  
-ai-context/api-contract.md  
-ai-context/coding-standards.md
+```
+ai-context/00-role.md
+ai-context/01-product.md
+ai-context/02-tech-stack.md
+ai-context/03-architecture.md
+ai-context/04-database.md
+ai-context/05-api-contract.md
+ai-context/06-coding-standards.md
+ai-context/07-ui-system.md
+spec/progress.md
+```
 
-Never generate code without understanding this context.
+`spec/progress.md` is mandatory every session — it tells you what is already built.
 
-## Development Workflow
+For any feature task, also read `spec/features/[feature-name].md` before writing code.
+For any UI task, also read `spec/ui/[screen-name].md` before writing code.
 
-Project workflow:
+---
 
-Idea  
-→ product definition  
-→ architecture design  
-→ database design  
-→ API contract  
-→ feature specification  
-→ UI generation  
-→ implementation
+## Bootstrap Mode
 
-When implementing a feature:
+When the user runs a bootstrap prompt (generating context files from `idea.md`):
 
-1. Identify the feature scope
-2. Check specifications in:
+1. Read `idea.md` fully
+2. Generate all `ai-context/` files with complete, production-quality content
+3. For any layer that does not apply, write the file with exactly: `N/A — [reason]`
+4. Generate `spec/features/` files — one per core feature
+5. Generate `spec/ui/` files — one per screen or major section (skip if project has no UI)
+6. Generate `spec/progress.md` with all features and UI sections listed as `todo`
+7. After generating all files: list what was created, flag assumptions, ask clarifying questions only for flagged items
 
-spec/features/
+The goal is that the user reviews and edits generated content — they should not have to write any file from scratch.
 
-3. If UI is required, follow prompts in:
+---
 
-spec/ui/
+## UI Implementation Rules
 
-4. Implement code inside:
+Never generate an entire screen or page at once. Always implement one section at a time, stop, and wait for review before continuing.
 
-src/
+All UI must follow `ai-context/07-ui-system.md`:
+- Only use color tokens defined there — no arbitrary hex or raw Tailwind color classes
+- Only use spacing values from the defined scale
+- Every component must handle all states explicitly: **default, loading, error, empty, success**
+- Responsive: mobile-first, handle all three breakpoints defined in the UI system
+- Accessibility: focus styles, aria labels on interactive elements, alt text on images
+
+If `07-ui-system.md` is N/A, skip all UI rules.
+
+---
 
 ## Architecture Rules
 
-Always follow the system architecture defined in:
+Always follow `ai-context/03-architecture.md`.
 
-ai-context/architecture.md
+Default layer separation — never mix responsibilities:
+- **Presentation** — components and pages only, no business logic, no direct DB calls
+- **Application** — feature logic and orchestration only, no DB calls
+- **Infrastructure** — DB and external API calls only, no business logic
+- **Domain** — entities and validation rules only
 
-Respect strict layer separation when applicable:
+If you detect a layer violation in existing code, flag it before proceeding.
 
-- Domain
-- Application
-- Infrastructure
-- Presentation
-
-Never mix responsibilities between layers.
+---
 
 ## API Rules
 
-All endpoints must follow the contract defined in:
+All endpoints must match `ai-context/05-api-contract.md` exactly:
+- Request body field names and types
+- Response shape including nesting
+- HTTP status codes
+- Error response format
 
-ai-context/api-contract.md
+If the contract does not define something you need, stop and ask the user to update `05-api-contract.md` before proceeding. Do not invent endpoints.
 
-Ensure:
+If `05-api-contract.md` is N/A, skip all API rules.
 
-- request format matches the contract
-- response format is consistent
-- database model alignment
+---
 
-## Quality and Validation
+## Bug Fix Protocol
 
-Before completing any implementation:
+When asked to fix a bug:
 
-1. Validate logic correctness
-2. Check for possible runtime errors
-3. Ensure API responses match the contract
-4. Confirm architecture rules are respected
+1. **Locate** — identify the exact file, function, and line
+2. **Diagnose** — state the root cause in one sentence before touching code
+3. **Scope** — list every file that will change
+4. **Fix** — implement the minimal change that addresses the root cause
+5. **Validate** — confirm the fix does not violate the API contract or architecture rules
 
-If issues are detected:
+Fix root causes, never symptoms. If the root cause requires an architecture change, say so and ask for confirmation first.
 
-- automatically debug
-- regenerate corrected code
-- validate again
+---
+
+## Agent Invocation
+
+When asked to run an agent, load the file and operate strictly within its instructions:
+
+- `agents/reviewer.md` — code and architecture review
+- `agents/ui-qa.md` — UI quality, states, accessibility, design system compliance
+- `agents/security.md` — security review
+
+Output format for all agents: numbered list grouped by **Critical / Warning / Suggestion**.
+
+---
+
+## Quality Validation
+
+Before presenting any implementation:
+- All UI states handled: loading, error, empty, success, default
+- API responses match contract shape exactly
+- No architecture layer violations
+- No hardcoded values outside design system or config
+- Logic matches acceptance criteria in the feature spec
+
+If any check fails, fix and re-validate silently before presenting output.
+
+---
 
 ## Documentation
 
-After implementing a new feature, generate documentation inside:
+After completing a feature, generate `docs/[feature-name].md` with:
+- Feature overview (2–3 sentences)
+- Architecture decisions made
+- API endpoints added or modified
+- Known limitations or follow-up tasks
 
-docs/
+---
 
-Create concise files describing:
+## Progress Tracking
 
-- feature overview
-- architecture impact
-- API endpoints
-- validation summary
-
-## Objective
-
-Your goal is to help build a scalable, maintainable production system following the defined architecture and context.
+After completing any feature or UI section, update `spec/progress.md` to reflect the new status.

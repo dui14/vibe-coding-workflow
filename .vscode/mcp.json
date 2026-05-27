@@ -1,0 +1,16 @@
+{
+	"servers": {
+		"github-mcp-dui14": {
+			"url": "https://api.githubcopilot.com/mcp/",
+			"type": "http"
+		},
+		"context7": {
+			"url": "https://mcp.context7.com/mcp",
+			"type": "http",
+            "headers": {
+                "CONTEXT7_API_KEY": "YOUR_CONTEXT7_API_KEY_HERE"
+            }
+        }
+    },
+	"inputs": []
+}
