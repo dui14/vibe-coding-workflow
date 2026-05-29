@@ -25,7 +25,9 @@ jobs:
           DATA=$(curl -s \
             -H "Authorization: token $GH_TOKEN" \
             https://api.github.com/repos/$REPO/traffic/clones)
-
+          
+          echo "$DATA"
+          
           COUNT=$(echo $DATA | jq '.count // 0')
 
           echo "{\"count\":$COUNT}" > .github/traffic.json
