@@ -7,7 +7,7 @@
   &nbsp;
   <img src="https://img.shields.io/github/forks/dui14/vibe-coding-workflow?style=for-the-badge&color=8b5cf6&label=Forks" />
   &nbsp;
-  <img src="https://img.shields.io/badge/dynamic-json?style=for-the-badge&color=22c55e&label=Clones&query=%24.count&url=https%3A%2F%2Fraw.githubusercontent.com%2Fdui14%2Fvibe-coding-workflow%2Fmain%2F.github%2Fworkflows%2Ftraffic.json" />
+  <img src="https://img.shields.io/badge/dynamic-json?style=for-the-badge&color=22c55e&label=Clones&query=%24.count&url=https%3A%2F%2Fraw.githubusercontent.com%2Fdui14%2Fvibe-coding-workflow%2Fmain%2F.github%2Ftraffic.json" />
   &nbsp;
 </p>
 
