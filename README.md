@@ -7,7 +7,7 @@
   &nbsp;
   <img src="https://img.shields.io/github/forks/dui14/vibe-coding-workflow?style=for-the-badge&color=8b5cf6&label=Forks" />
   &nbsp;
-  <img src="https://img.shields.io/badge/dynamic-json?style=for-the-badge&color=22c55e&label=Clones&query=%24.count&url=https%3A%2F%2Fraw.githubusercontent.com%2Fdui14%2Fvibe-coding-workflow%2Fmain%2F.github%2Ftraffic.json&cacheSeconds=300" />
+  <img src="https://img.shields.io/badge/dynamic-json?style=for-the-badge&color=22c55e&label=Clones&query=%24.count&url=https%3A%2F%2Fraw.githubusercontent.com%2Fdui14%2Fvibe-coding-workflow%2Fmain%2F.github%2Ftraffic.json" />
   &nbsp;
 </p>
 
@@ -62,7 +62,7 @@ Each phase has a copy-paste prompt in the sections below. You never write prompt
 You describe your idea. The bootstrap prompt turns it into a complete context system:
 all architecture files, feature specs, UI specs, and a progress tracker — written by the agent, not by you.
 
-You review the output, edit what needs changing, then build phase by phase with Copilot (optiona).
+You review the output, edit what needs changing, then build phase by phase with Copilot (optional).
 
 ```mermaid
 ---
@@ -445,7 +445,7 @@ Skills are placed in `skills/`. See `skills/README.md` for the full list of task
 
 ### Core MCP Servers
 
-**context7** — auto-fetches live docs for any library before Copilot writes library-specific code. This eliminates the most common class of vibe coding bugs (wrong API shapes, deprecated patterns, outdated syntax).
+**context7** — auto-fetches live docs for any library before Copilot writes library-specific code. This eliminates the most common class of vibe coding bugs (wrong API shapes, deprecated patterns, version mismatches).
 
 **playwright** — browser automation for screenshots, user-flow testing, responsive testing, and UI verification. Run `npm run dev`, then ask Copilot to test flows or capture screenshots.
 
@@ -457,7 +457,7 @@ Skills are placed in `skills/`. See `skills/README.md` for the full list of task
 
 ### Advanced MCP Servers
 
-**chrome-devtools** — deep browser debugging through Chrome DevTools Protocol. Lets the agent inspect console logs, network requests, performance traces, DOM state, and runtime issues directly from Chrome.
+**chrome-devtools** — deep browser debugging through Chrome DevTools Protocol. Lets the agent inspect console logs, network requests, performance traces, DOM state, and runtime issues directly from the browser.
 
 Use it when:
 - Debugging frontend runtime errors
@@ -479,3 +479,25 @@ Useful for:
 STDIO mode:
 ```bash
 markitdown-mcp
+```
+
+---
+
+## License
+
+This project scaffold is open source and available under the MIT License.
+
+---
+
+## Contributing
+
+Contributions are welcome. Please open an issue or PR to suggest improvements to the workflow or documentation.
+
+---
+
+## Support
+
+For questions or issues:
+- Check the README and each `.md` file thoroughly
+- Open a [GitHub Issue](https://github.com/dui14/vibe-coding-workflow/issues)
+- Read the full documentation in each `ai-context/` file
