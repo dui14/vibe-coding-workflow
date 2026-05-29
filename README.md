@@ -483,12 +483,6 @@ markitdown-mcp
 
 ---
 
-## License
-
-This project scaffold is open source and available under the MIT License.
-
----
-
 ## Contributing
 
 Contributions are welcome. Please open an issue or PR to suggest improvements to the workflow or documentation.
