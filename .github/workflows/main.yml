@@ -18,7 +18,7 @@ jobs:
 
       - name: Fetch clone stats
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
           REPO="dui14/vibe-coding-workflow"
 
@@ -27,7 +27,7 @@ jobs:
             https://api.github.com/repos/$REPO/traffic/clones)
           
           echo "$DATA"
-          
+
           COUNT=$(echo $DATA | jq '.count // 0')
 
           echo "{\"count\":$COUNT}" > .github/traffic.json
