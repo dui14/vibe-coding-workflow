@@ -1,5 +1,8 @@
 name: Traffic Stats
 
+permissions:
+  contents: write
+
 on:
   schedule:
     - cron: "0 */12 * * *"
@@ -12,12 +15,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GH_TOKEN }}
 
       - name: Fetch clone stats
         env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           REPO="dui14/vibe-coding-workflow"
 
@@ -34,6 +35,6 @@ jobs:
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
 
-          git add .github/workflows/traffic.json
+          git add .github/traffic.json
           git commit -m "update traffic stats" || exit 0
           git push
