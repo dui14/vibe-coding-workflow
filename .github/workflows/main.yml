@@ -27,7 +27,7 @@ jobs:
 
           COUNT=$(echo $DATA | jq '.count')
 
-          echo "{\"count\":$COUNT}" > .github/workflows/traffic.json
+          echo "{\"count\":$COUNT}" > .github/traffic.json
 
       - name: Commit changes
         run: |
