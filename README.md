@@ -64,31 +64,34 @@ all architecture files, feature specs, UI specs, and a progress tracker — writ
 
 You review the output, edit what needs changing, then build phase by phase with Copilot (optional).
 
+<div align="center" style="max-width: 900px; margin: 0 auto;">
+
 ```mermaid
 ---
 config:
   layout: fixed
 ---
-flowchart TB
- subgraph AICTX["ai-context/"]
-    direction LR
+flowchart LR
+  subgraph AICTX["ai-context/"]
+    direction TB
         A1["00–06"]
         A2["07-ui-system"]
         A3["08-mcp-tools"]
   end
- subgraph SKILLS["npx skills add ... (from skills.sh)"]
-    direction LR
+  subgraph SKILLS["npx skills add ... (from skills.sh)"]
+    direction TB
         S1["ui-design"]
         S2["shadcn"]
   end
- subgraph MCP[".vscode/mcp.json — MCP servers"]
-    direction LR
+  subgraph MCP[".vscode/mcp.json — MCP servers"]
+    direction TB
         M1["context7<br>fetch live docs"]
         M2["github<br>repo operations"]
         M3["playwright<br>UI testing"]
         M4["filesystem<br>file ops"]
         M5["your own<br>+ more"]
   end
+
     IDEA["idea.md<br>describe your project"] --> BOOT["Bootstrap agent<br>generates all .md files"]
     BOOT --> AICTX
     AICTX --> COPILOT["copilot-instructions.md<br>loads context + skills per task type"]
@@ -113,6 +116,7 @@ flowchart TB
     SKILLS@{ shape: rounded}
     BUILD@{ shape: rounded}
     MCP@{ shape: rounded}
+
     style IDEA fill:#7B3F00,stroke:#F2A93B,color:#ffffff
     style BOOT fill:#4B3FA5,stroke:#B7A9FF,color:#ffffff
     style AICTX fill:#0F4C8A,stroke:#73B6FF,color:#ffffff,stroke-dasharray: 5 5
