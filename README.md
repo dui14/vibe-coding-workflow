@@ -125,6 +125,7 @@ flowchart LR
     style BUILD fill:#7B2D16,stroke:#FF9A6A,color:#ffffff
     style MCP fill:#355E00,stroke:#9EEA52,color:#ffffff,stroke-dasharray: 5 5
 ```
+</div>
 
 ```
 Your idea (1 prompt)
