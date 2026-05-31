@@ -39,6 +39,23 @@ Files beginning with `N/A —` mean that layer does not exist in this project. S
 
 ---
 
+## Skills
+
+### Frontend / React
+Before working on React components, read:
+
+- skills/react/SKILL.md
+- skills/tailwind/SKILL.md
+
+### Backend API
+Before building APIs, read:
+
+- skills/fast-api/SKILL.md
+- skills/async-python/SKILL.md
+- etc ...
+
+---
+
 ## Agents
 
 - `agents/reviewer.md` — code and architecture review
