@@ -10,7 +10,14 @@
             "headers": {
                 "CONTEXT7_API_KEY": "YOUR_CONTEXT7_API_KEY_HERE"
             }
-        }
+        },
+		"codegraph": {
+			"command": "node",
+			"args": ["node_modules/@colbymchenry/codegraph/dist/bin/codegraph.js", "serve", "--mcp"],
+			"env": {
+				"CODEGRAPH_ROOT_DIR": "${workspaceFolder}"
+			}
+		}
     },
 	"inputs": []
 }
