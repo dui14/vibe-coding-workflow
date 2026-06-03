@@ -28,12 +28,13 @@ Before working on feature X, read:
 
 ## Code Understanding with CodeGraph
 
-Before implementing a feature, you can search the codebase for:
-- Function signatures and implementations
-- Import/export relationships
-- API endpoints and route handlers
-- Component definitions and usage
-- Type definitions and interfaces
+CodeGraph indexed database is available at `.codegraph/codegraph.db`.Use this database to:
+- Search for related code patterns and implementations
+- Understand code structure and dependencies
+- Find similar functions or classes
+- Reference existing patterns when writing new code
+
+When implementing features, first consult the codegraph database for similar implementations to maintain consistency and reuse patterns.
 
 Use the CodeGraph MCP tool to:
 1. Search for symbols: `searchNodes("UserService")`
