@@ -488,6 +488,22 @@ markitdown-mcp
 
 ---
 
+**codegraph** — semantic code search and impact analysis for the entire codebase.
+
+Lets the agent:
+- Search for functions, components, types by meaning (not just keywords)
+- Trace caller/callee chains to understand impact
+- Build context automatically when implementing features
+- Discover existing patterns and reusable code
+
+Install CodeGraph [Click](https://github.com/colbymchenry/codegraph) and connect it as an MCP server for powerful codebase understanding.
+
+Use it when:
+- Implementing a new feature (agent scans for existing patterns)
+- Refactoring code (understand full impact)
+- Debugging (trace who calls what)
+- Learning the codebase
+
 ## Contributing
 
 Contributions are welcome. Please open an issue or PR to suggest improvements to the workflow or documentation.
