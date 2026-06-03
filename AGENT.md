@@ -1,42 +1,8 @@
 # Agent Instructions
 
-This file is the context entry point for Claude Code, Cursor, and other agent CLIs.
-Rules mirror `.github/copilot-instructions.md` — if one changes, update the other.
-
----
-
-## First Action Every Session
-
-Read in order, skip any file starting with `N/A`:
-
-```
-ai-context/00-role.md
-ai-context/01-product.md
-ai-context/02-tech-stack.md
-ai-context/03-architecture.md
-ai-context/04-database.md
-ai-context/05-api-contract.md
-ai-context/06-coding-standards.md
-ai-context/07-ui-system.md
-spec/progress.md
-```
-
-`spec/progress.md` is mandatory — do not implement features that are already marked `done`.
-
----
-
-## Bootstrap Mode
-
-If `idea.md` exists and the `ai-context/` files are empty or missing, you are in bootstrap mode.
-
-Read `idea.md` and generate all context files as defined in `.github/copilot-instructions.md` Bootstrap Mode section. Files that do not apply get written as `N/A — [reason]`, not left empty.
-
----
-
-## N/A Files
-
-Files beginning with `N/A —` mean that layer does not exist in this project. Skip them silently. Never generate code for a layer marked N/A.
-
+This file is the context entry point for Antigravity, Cursor, and other agent CLIs.
+> Rules mirror `.github/copilot-instructions.md` — if one changes, update the other.
+> If you want to add another section here (Recommended) update the same section in [.github/copilot-instructions.md](.github/copilot-instructions.md) as well.
 ---
 
 ## Skills
@@ -52,18 +18,27 @@ Before building APIs, read:
 
 - skills/fast-api/SKILL.md
 - skills/async-python/SKILL.md
-- etc ...
+
+### My Custom Domain
+Before working on feature X, read:
+
+- skills/my-custom/SKILL.md
 
 ---
 
-## Agents
+## Code Understanding with CodeGraph
 
-- `agents/reviewer.md` — code and architecture review
-- `agents/ui-qa.md` — UI quality and design system compliance
-- `agents/security.md` — security review
+Before implementing a feature, you can search the codebase for:
+- Function signatures and implementations
+- Import/export relationships
+- API endpoints and route handlers
+- Component definitions and usage
+- Type definitions and interfaces
 
----
+Use the CodeGraph MCP tool to:
+1. Search for symbols: `searchNodes("UserService")`
+2. Get callers/callees: `getCallers("getUserById")`
+3. Trace impact radius: `getImpactRadius("src/db/schema.ts")`
+4. Build context: `buildContext(nodeId)` → markdown summary
 
-## After Every Task
-
-Update `spec/progress.md` with current status.
+Results feed directly into your implementation context. 

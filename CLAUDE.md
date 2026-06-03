@@ -1,3 +1,4 @@
 # Claude Instruction 
 
-Copy and paste from `.github\copilot-instructions.md` if you using Claude Code, Cursor, or another agent CLI. This file is the context entry point for those agents. Rules mirror `copilot-instructions.md` — if one changes, update the other.
+This file is the context entry point for CLAUDE.
+> Rules mirror [copilot-instructions.md](.github/copilot-instructions.md) — if one changes, update the other.
