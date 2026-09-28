@@ -12,7 +12,7 @@ Skills are reusable procedural knowledge files. Copilot reads the relevant skill
 npx skills add owner/repo-name
 ```
 
-This downloads the skill files into this `skills/` folder.
+This downloads the skill files into this `.agents/skills/` folder.
 
 ### Recommended for web / full-stack projects
 
@@ -51,9 +51,9 @@ Browse more at: https://www.skills.sh
 
 ---
 
-## How Copilot Uses Skills
+## How Agents Uses Skills
 
-`copilot-instructions.md` tells Copilot which skill to read before each task type:
+`AGENTS.md` tells AI Coding which skill to read before each task type:
 
 | Task | Skill loaded |
 |---|---|
@@ -65,12 +65,6 @@ Browse more at: https://www.skills.sh
 | Debugging | `skills/diagnose` or `skills/systematic-debugging` |
 | Polishing UI | `skills/polish` or `skills/impeccable` |
 
-Copilot checks `skills/` for the relevant file before starting. If the file doesn't exist, it proceeds without it. You never need to reference skills manually in your prompts.
+It checks `.agents/skills/` for the relevant file before starting. If the file doesn't exist, it proceeds without it. You never need to reference skills manually in your prompts.
 
 ---
-
-## Adding Your Own Skills
-
-Create a `.md` file in this folder with any procedural knowledge you want Copilot to apply consistently — company code standards, a specific design system, a recurring pattern you use across projects.
-
-Then register it in `copilot-instructions.md` under the Skills section with the task type it applies to.
