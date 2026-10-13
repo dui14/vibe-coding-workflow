@@ -50,7 +50,7 @@ etc ...
 | **3. Review files** | Edit generated `ai-context/` and `spec/` files | 10–20 min |
 | **4. Src structure** | Paste the src bootstrap prompt | 1 min |
 | **5. Build** | Feature by feature: UI → backend → connect | per feature |
-| **6. Review** | Run `agents/reviewer.md` and `agents/ui-qa.md` | per feature |
+| **6. Review** | Run `.agents/code-review/SKILL.md` and `.agents/ui-qa/SKILL.md` | per feature |
 | **7. Track** | Update `spec/progress.md` | ongoing |
  
 Each phase has a copy-paste prompt in the sections below. You never write prompts from scratch.
@@ -145,11 +145,14 @@ Feature specs → UI specs → Build → Review
 ├── .github
 │   └── copilot-instructions.md   # Auto-loaded by VSCode Copilot — global rules
 ├── .vscode
-│   └── mcp.json                  # Optional MCP server connections
-├── agents
-│   ├── reviewer.md               # Code + architecture review agent
-│   ├── ui-qa.md                  # UI quality, states, accessibility agent
-│   └── security.md               # Security review agent
+│   └── mcp.json                  # Workspace MCP server config, or create .mcp.json for personal servers
+├── .agents/skills
+│   ├── code-review               # Code + architecture review agent
+│   ├── bootstrap                 # Set up minimal AI context/AGENTS.md based on actual stack and architecture without changing app code.
+│   ├── codegraph                 # Semantic code search and impact analysis agent
+│   ├── finish-feature            # Verify via tests, clean code, update docs/progress.md, and record verified behavior only.
+│   ├── fix-bug                   # Isolate issue, find root cause, apply minimal fix, test, and report results without unrelated changes
+│   └── security                  # Security review agent (suggest find SKILL that match the stack)
 ├── ai-context
 │   ├── 00-role.md                # AI persona and behavior rules
 │   ├── 01-product.md             # What you're building and for whom
@@ -164,8 +167,8 @@ Feature specs → UI specs → Build → Review
 │   ├── ui/                       # One .md per screen/section, auto-generated
 │   └── progress.md               # Build status tracker, auto-generated
 ├── docs/                         # Auto-generated after each feature
-├── AGENT.md                      # Context for Claude Code / agent CLIs
-└── CLAUDE.md                     # Context alias for Claude
+├── AGENTS.md                     # Context for agent CLIs
+└── CLAUDE.md                     # Context for Claude Code
 ```
 
 ---
@@ -203,7 +206,7 @@ Design: editorial and typographic, dark background, serif display font, minimal 
 
 ## Step 2 — Run the Bootstrap Prompt
 
-Open Copilot Chat in VSCode. Paste this prompt:
+Open your AI Agent. Paste this prompt:
 
 ```
 Read idea.md.
@@ -313,7 +316,7 @@ Do not implement any other section yet.
 
 After each section, run:
 ```
-You are the agent defined in agents/ui-qa.md.
+You are the agent defined in .agents/ui-qa.md or add your SKILL
 Review src/[component-path].
 Reference: ai-context/07-ui-system.md
 Report findings grouped by: Critical / Warning / Suggestion.
@@ -347,14 +350,14 @@ Error messages must be user-readable.
 Run after every completed feature:
 
 ```
-You are the agent defined in agents/reviewer.md.
+You are the agent use code-review skill 
 Review the implementation in src/[path].
 Cross-reference: ai-context/03-architecture.md and ai-context/06-coding-standards.md.
 ```
 
 Run before shipping any auth or data-handling feature:
 ```
-You are the agent defined in agents/security.md.
+You are the agent use security skill
 Review src/[path].
 Focus: input validation, auth checks, data exposure, injection risks.
 ```
