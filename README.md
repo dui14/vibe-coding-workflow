@@ -1,70 +1,72 @@
 # Vibe-coding Workflow
 
-<p align="left">
-  <img src="https://komarev.com/ghpvc/?username=dui14&label=Views&color=3b82f6&style=for-the-badge" />
-  &nbsp;
-  <img src="https://img.shields.io/github/stars/dui14/vibe-coding-workflow?style=for-the-badge&color=facc15&label=Stars" />
-  &nbsp;
-  <img src="https://img.shields.io/github/forks/dui14/vibe-coding-workflow?style=for-the-badge&color=8b5cf6&label=Forks" />
-  &nbsp;
-  <img src="https://img.shields.io/badge/dynamic/json?style=for-the-badge&color=22c55e&label=Clones&query=$.count&url=https://raw.githubusercontent.com/dui14/vibe-coding-workflow/main/.github/traffic.json" />
-  &nbsp;
-</p>
+![](https://komarev.com/ghpvc/?username=dui14&label=Views&color=3b82f6&style=for-the-badge)   ![](https://img.shields.io/github/stars/dui14/vibe-coding-workflow?style=for-the-badge&color=facc15&label=Stars)   ![](https://img.shields.io/github/forks/dui14/vibe-coding-workflow?style=for-the-badge&color=8b5cf6&label=Forks)   ![](https://img.shields.io/badge/dynamic/json?style=for-the-badge&color=22c55e&label=Clones&query=$.count&url=https://raw.githubusercontent.com/dui14/vibe-coding-workflow/main/.github/traffic.json)  
 
-> One prompt. Agent writes the entire dev system. You review and ship.
- 
-A project scaffold for AI-native development with GitHub Copilot. Describe your idea — the agent generates all architecture files, feature specs, UI specs, and a progress tracker. You edit, not write from scratch.
- 
-Works with: **GitHub Copilot** (VSCode) · **Claude Code** · **Cursor** · **Windsurf** · **Antigravity**
- 
+> One prompt. Agent writes the development context. You review the spec, then build.
+
+A project scaffold for AI-native development. Describe your idea — the agent generates architecture files, feature specs, UI specs, and a progress tracker. You edit, not write from scratch.
+
+Works with any coding agent that reads `AGENTS.md` and project skills: **Cursor**, **Claude Code**, **GitHub Copilot**, **Windsurf**, **Antigravity**, and similar.
+
+This repo is built for **Case 1** (from nothing). Cases 2 and 3 reuse the same rules for skills, CLI, MCP, and hooks — they need extra process skills, not a different editor.
+
 ---
- 
+
+## Which case are you in?
+
+| Case | Starting point | This repo |
+|---|---|---|
+| **1. Build from nothing** | An idea or a problem to solve. No app yet. | Best fit. Follow the Case 1 workflow below. |
+| **2. Build from half-built source** | Code exists, incomplete or undocumented. | Keep `AGENTS.md` + `.agents/skills/`. Add onboarding and gap-fill skills. |
+| **3. Scale a finished product** | App works. You need scale, ops, reliability. | Keep the same core. Add perf/devops skills and read-only ops MCP. |
+
+---
+
 ## Quick Start
- 
+
 **Requires**: Node.js 18+
- 
+
 ```bash
 # 1. Use this repo as a template (recommended)
-#    Click "Use this template" on GitHub → create your project repo
- 
+# Click "Use this template" on GitHub → create your project repo
+
 # or clone directly
 git clone https://github.com/dui14/vibe-coding-workflow.git your-project
 cd your-project
- 
-# 2. (Optional) Install skills (skills.sh) for your stack
+
+# 2. (Optional) Install extra skills for your stack
 npx skills add vercel-labs/agent-skills
 npx skills add shadcn/ui
-etc ...
 ```
- 
+
 > No `npm install` needed. This repo is context files only — no runtime dependencies.
- 
+
+Skills install into `.agents/skills/<name>/`.
+
 ---
- 
-## Run Each Phase
- 
-| Phase | What to do | Time |
+
+## Tooling by role (all cases)
+
+Pick the layer by what it is for. Do not turn every need into an MCP server.
+
+| Kind | Use for | Why |
 |---|---|---|
-| **1. Write idea** | Create `idea.md`, describe your project freely | 5 min |
-| **2. Bootstrap** | Paste the bootstrap prompt into Chat | 2 min |
-| **3. Review files** | Edit generated `ai-context/` and `spec/` files | 10–20 min |
-| **4. Src structure** | Paste the src bootstrap prompt | 1 min |
-| **5. Build** | Feature by feature: UI → backend → connect | per feature |
-| **6. Review** | Run `.agents/code-review/SKILL.md` and `.agents/ui-qa/SKILL.md` | per feature |
-| **7. Track** | Update `spec/progress.md` | ongoing |
- 
-Each phase has a copy-paste prompt in the sections below. You never write prompts from scratch.
- 
+| **Skill** | How to work: `bootstrap`, `code-review`, `finish-feature`, `fix-bug`; case 2/3 add `onboard-codebase`, `characterize-tests`, `triage-bug`, `gap-fill`, `perf-scale`, `devops-readiness` | Loaded only when the task matches. Free when unused. |
+| **Deterministic CLI** | `gitleaks`, `semgrep`, `trivy`, `k6`, the project test runner, `ctags` | Agent runs them in the shell. Prefer CLI over MCP when a CLI already exists — MCP schemas cost tokens every turn. |
+| **MCP** | Outside systems: GitHub, context7 (live docs), codegraph (code navigation), Playwright (UI). Case 3 may add **read-only** logs/metrics. | Keep **4–5 servers**. Do not grow the list. |
+| **Hooks** | Proof gates (run tests/lint before the agent is allowed to stop) | Does not depend on the model remembering to verify. |
+
+Default MCP set (case 1 and 2): **GitHub**, **context7**, **codegraph**, **Playwright**.
+
+Put MCP config where **your** agent reads it (examples: `.mcp.json`, `.cursor/mcp.json`, `.vscode/mcp.json`). Copy the same server list; do not treat any one editor path as the source of truth.
+
+Model routing lives in `AGENTS.md` so every agent sees the same assignment.
+
 ---
 
-## How It Works
+## How It Works (Case 1)
 
-You describe your idea. The bootstrap prompt turns it into a complete context system:
-all architecture files, feature specs, UI specs, and a progress tracker — written by the agent, not by you.
-
-You review the output, edit what needs changing, then build phase by phase with Copilot (optional).
-
-<div align="center" style="max-width: 900px; margin: 0 auto;">
+You describe the idea. Bootstrap writes context + specs. **You review that spec before any** `src/` **work.** Then you build feature by feature. `spec/progress.md` may mark a feature `done` only after its acceptance commands pass.
 
 ```mermaid
 ---
@@ -74,67 +76,67 @@ config:
 flowchart LR
   subgraph AICTX["ai-context/"]
     direction TB
-        A1["00–06"]
-        A2["07-ui-system"]
-        A3["08-mcp-tools"]
+        A1["full: 00–08"]
+        A2["lite: 3 files"]
   end
-  subgraph SKILLS["npx skills add ... (from skills.sh)"]
+  subgraph SKILLS[".agents/skills/"]
     direction TB
-        S1["ui-design"]
-        S2["shadcn"]
+        S1["bootstrap"]
+        S2["code-review"]
+        S3["finish-feature"]
+        S4["design-taste-frontend"]
+        S5["impeccable"]
   end
-  subgraph MCP[".vscode/mcp.json — MCP servers"]
+  subgraph MCP["MCP — 4 servers"]
     direction TB
-        M1["context7<br>fetch live docs"]
-        M2["github<br>repo operations"]
-        M3["playwright<br>UI testing"]
-        M4["filesystem<br>file ops"]
-        M5["your own<br>+ more"]
+        M1["context7"]
+        M2["github"]
+        M3["playwright"]
+        M4["codegraph"]
   end
 
-    IDEA["idea.md<br>describe your project"] --> BOOT["Bootstrap agent<br>generates all .md files"]
-    BOOT --> AICTX
-    AICTX --> COPILOT["copilot-instructions.md<br>loads context + skills per task type"]
-    SKILLS -.-> COPILOT
-    COPILOT --> BUILD["Build phases<br>bootstrap src/ → feature specs → UI → backend → connect → agents review"]
+    IDEA["idea.md"] --> BOOT["Bootstrap"]
+    BOOT --> SPEC["spec/ + ai-context/"]
+    SPEC --> GATE["You review spec"]
+    GATE --> AICTX
+    AICTX --> BUILD["Build against spec"]
+    SKILLS -.-> BUILD
+    BUILD --> PROOF["AC commands pass"]
+    PROOF --> PROG["progress.md = done"]
     BUILD --> MCP
 
-    A1@{ shape: rounded}
-    A2@{ shape: rounded}
-    A3@{ shape: rounded}
-    S1@{ shape: rounded}
-    S2@{ shape: rounded}
-    M1@{ shape: rounded}
-    M2@{ shape: rounded}
-    M3@{ shape: rounded}
-    M4@{ shape: rounded}
-    M5@{ shape: rounded}
     IDEA@{ shape: rounded}
     BOOT@{ shape: rounded}
+    SPEC@{ shape: rounded}
+    GATE@{ shape: rounded}
     AICTX@{ shape: rounded}
-    COPILOT@{ shape: rounded}
-    SKILLS@{ shape: rounded}
     BUILD@{ shape: rounded}
+    PROOF@{ shape: rounded}
+    PROG@{ shape: rounded}
+    SKILLS@{ shape: rounded}
     MCP@{ shape: rounded}
 
     style IDEA fill:#7B3F00,stroke:#F2A93B,color:#ffffff
     style BOOT fill:#4B3FA5,stroke:#B7A9FF,color:#ffffff
+    style GATE fill:#7B2D16,stroke:#FF9A6A,color:#ffffff
+    style PROOF fill:#0D5C47,stroke:#5DE2B1,color:#ffffff
     style AICTX fill:#0F4C8A,stroke:#73B6FF,color:#ffffff,stroke-dasharray: 5 5
-    style COPILOT fill:#4A4A4A,stroke:#BDBDBD,color:#ffffff
-    style SKILLS fill:#0D5C47,stroke:#5DE2B1,color:#ffffff,stroke-dasharray: 5 5
-    style BUILD fill:#7B2D16,stroke:#FF9A6A,color:#ffffff
+    style BUILD fill:#4A4A4A,stroke:#BDBDBD,color:#ffffff
     style MCP fill:#355E00,stroke:#9EEA52,color:#ffffff,stroke-dasharray: 5 5
 ```
-</div>
 
 ```
-Your idea (1 prompt)
-        ↓
-Agent writes all context files
-        ↓
-You review + edit (not write from scratch)
-        ↓
-Feature specs → UI specs → Build → Review
+idea.md
+      ↓
+Bootstrap → ai-context/ + spec/
+      ↓
+You review the spec (hard gate — no src/ yet)
+      ↓
+Bootstrap src/ structure
+      ↓
+Build feature → run AC commands → finish-feature
+      ↓
+progress.md = done only if the gate passed
 ```
 
 ---
@@ -142,43 +144,54 @@ Feature specs → UI specs → Build → Review
 ## Repository Structure
 
 ```
+├── AGENTS.md                     # Shared agent rules (all editors)
+├── CLAUDE.md                     # Points at AGENTS.md
+├── LICENSE                       # MIT License (KHANG LUONG)
 ├── .github
-│   └── copilot-instructions.md   # Auto-loaded by VSCode Copilot — global rules
+│   └── copilot-instructions.md   # Points at AGENTS.md
 ├── .vscode
-│   └── mcp.json                  # Workspace MCP server config, or create .mcp.json for personal servers
+│   └── mcp.json                  # Example MCP list (copy into your agent's config)
 ├── .agents/skills
-│   ├── code-review               # Code + architecture review agent
-│   ├── bootstrap                 # Set up minimal AI context/AGENTS.md based on actual stack and architecture without changing app code.
-│   ├── codegraph                 # Semantic code search and impact analysis agent
-│   ├── finish-feature            # Verify via tests, clean code, update docs/progress.md, and record verified behavior only.
-│   ├── fix-bug                   # Isolate issue, find root cause, apply minimal fix, test, and report results without unrelated changes
-│   └── security                  # Security review agent (suggest find SKILL that match the stack)
-├── ai-context
-│   ├── 00-role.md                # AI persona and behavior rules
-│   ├── 01-product.md             # What you're building and for whom
-│   ├── 02-tech-stack.md          # Every library and tool with versions
-│   ├── 03-architecture.md        # System structure and layer rules
-│   ├── 04-database.md            # Schema, models, naming — N/A if no DB
-│   ├── 05-api-contract.md        # Endpoints and response shapes — N/A if no API
-│   ├── 06-coding-standards.md    # Patterns, naming, anti-patterns
-│   └── 07-ui-system.md           # Design tokens, states, component rules
+│   ├── bootstrap
+│   ├── code-review
+│   ├── codegraph
+│   ├── finish-feature
+│   ├── fix-bug
+│   ├── security                  # Use if the skill file has content; otherwise install a stack-matched security skill
+│   ├── design-taste-frontend     # Taste Skill — landing pages and art direction
+│   └── impeccable                # Review and improve UI during development
+├── ai-context                    # Full mode: 00–08. Lite mode: 3 files only
 ├── spec
-│   ├── features/                 # One .md per feature, auto-generated
-│   ├── ui/                       # One .md per screen/section, auto-generated
-│   └── progress.md               # Build status tracker, auto-generated
-├── docs/                         # Auto-generated after each feature
-├── AGENTS.md                     # Context for agent CLIs
-└── CLAUDE.md                     # Context for Claude Code
+│   ├── features/                 # Runnable acceptance criteria
+│   ├── ui/
+│   └── progress.md
+├── docs/
+└── idea.md
 ```
+
+See `.agents/README.md` for when to load each skill. UI UX Pro Max is not in this tree; install it before use.
 
 ---
 
-## Step 1 — Write Your Idea
+## Case 1 — Build from nothing
 
-Open a new file called `idea.md` in the root. Write freely — no template required.
-The more detail the better, but even a short description works.
+### Context mode: full vs lite
 
-Example for a SaaS app:
+| Mode | When | Files |
+|---|---|---|
+| **Lite** | Small project (landing page, script, single-purpose tool). Saves tokens. | **3 files**: `01-product.md`, `02-tech-stack.md`, `06-coding-standards.md`. Fold role, architecture, and UI tokens into those three. Spec: `spec/features/` + `spec/progress.md` only. Skip `spec/ui/` unless a screen is non-obvious. |
+| **Full** | Multi-layer app (SaaS, API + UI, auth, DB). | `ai-context/00` through `08`, plus `spec/features/`, `spec/ui/`, `spec/progress.md`. |
+
+If `idea.md` does not say otherwise, use **lite** when there is no database, no auth, and at most a handful of screens. Use **full** when layers, contracts, or many features exist.
+
+---
+
+### Step 1 — Write your idea
+
+Create `idea.md` in the project root. Write freely. More detail helps; a short description is enough.
+
+Example for a SaaS app (full mode):
+
 ```
 I want to build a study schedule manager for university students.
 Students can create tasks with deadlines, schedule them into time blocks,
@@ -190,7 +203,8 @@ Deploy to Vercel (frontend) + Railway (backend).
 Design: clean and minimal, dark mode default, no decorative elements.
 ```
 
-Example for a personal landing page:
+Example for a personal landing page (lite mode):
+
 ```
 Personal portfolio for a frontend developer.
 Target: recruiters and potential freelance clients.
@@ -200,322 +214,376 @@ Skills to show: React, Next.js, TypeScript, Node.js, Tailwind, Figma.
 
 Stack: Next.js + Tailwind, deployed to Vercel. No backend, contact form via Resend.
 Design: editorial and typographic, dark background, serif display font, minimal UI.
+
+Use lite context (3 files).
 ```
 
 ---
 
-## Step 2 — Run the Bootstrap Prompt
+### Step 2 — Bootstrap (spec only — do not build)
 
-Open your AI Agent. Paste this prompt:
+Open your coding agent and paste:
 
 ```
 Read idea.md.
+Read AGENTS.md.
+Use the bootstrap skill in .agents/skills/bootstrap/SKILL.md.
 
-You are a senior software architect. Based on this idea, generate the complete development context system for this project.
+You are a senior software architect. Generate the development context for this project.
 
-Generate and write the following files with full content:
+Choose lite or full:
+- Lite if the idea is a small site, script, or tool with no DB/auth and few screens: write only
+  ai-context/01-product.md, ai-context/02-tech-stack.md, ai-context/06-coding-standards.md.
+  Fold role, one-page architecture, and UI tokens into those files.
+- Full otherwise: write ai-context/00-role.md through ai-context/08-mcp-tools.md as listed below.
+
+Full file list (skip files that lite mode replaces):
 
 ai-context/00-role.md
-— Define the AI role, expertise level, and behavior rules for this project.
+— AI role, expertise, behavior rules.
 
 ai-context/01-product.md
-— Product name, description, target users, core features list, non-goals, and success criteria.
+— Product name, users, features, non-goals, success criteria.
 
 ai-context/02-tech-stack.md
-— Every library, framework, and tool with version numbers. Include frontend, backend, database, auth, deployment, and any third-party services.
+— Libraries and tools with versions. Frontend, backend, database, auth, deploy, third parties.
 
 ai-context/03-architecture.md
-— System structure, folder layout inside src/, layer responsibilities, data flow diagram in plain text.
+— System structure, src/ layout, layer rules, data flow in plain text.
 
 ai-context/04-database.md
-— All tables/collections, field names, types, relations, indexes, and naming conventions.
-— If this project has no database, write: "N/A — this project has no database layer."
+— Tables, fields, relations, indexes, naming.
+— If no database: "N/A — this project has no database layer."
 
 ai-context/05-api-contract.md
-— All endpoints: method, path, request body, response shape, error codes.
-— If this project has no API, write: "N/A — this project has no API layer."
+— Endpoints: method, path, body, response, errors.
+— If no API: "N/A — this project has no API layer."
 
 ai-context/06-coding-standards.md
-— Naming conventions, file structure inside src/, patterns to always use, patterns to never use, import order.
+— Naming, src/ patterns, always/never, import order. In lite mode, include UI tokens here if there is a UI.
 
 ai-context/07-ui-system.md
-— Complete design system: color tokens (with hex values), typography scale, spacing scale, breakpoints, animation rules, component state patterns, icon library.
+— Tokens, type scale, spacing, breakpoints, motion, component states, icon library.
+
+ai-context/08-mcp-tools.md
+— Only the 4–5 MCP servers this project will actually use, and when to prefer CLI instead.
 
 spec/features/
-— One .md file per core feature. Each file must include: user story, acceptance criteria, UI states, API endpoints used, validation rules, edge cases.
-— If a feature has no UI, note that in the file.
+— One .md per core feature. Each file must include: user story, UI states, API used, validation, edge cases.
+— Acceptance criteria MUST be runnable commands (test runner, curl, CLI), not prose.
+— Example:
+  - `npm test -- tests/auth.spec.ts` exits 0
+  - `curl -sf http://localhost:3000/api/health` exits 0
+— If a feature has no UI, say so.
 
 spec/ui/
-— One .md file per screen or major section. Each file must include: layout structure, every element and its states (default, loading, error, empty, success), responsive behavior, skeleton structure.
-— Only generate this for features that have a UI component.
+— Full mode only, and only for features with UI: layout, element states, responsive behavior.
 
 spec/progress.md
-— A status table listing every feature and UI section with status: todo.
-— Include a context files checklist.
+— Table: feature, acceptance command, status.
+— Every status starts as `todo`.
+— `done` is forbidden until the acceptance command has been run and passed.
 
-After generating all files:
-1. List every file created
-2. Flag any assumptions made due to missing information in idea.md
-3. Ask for clarification on flagged items only
+After writing files:
+1. List every file created and whether this run used lite or full.
+2. Flag assumptions from gaps in idea.md.
+3. STOP. Do not create src/, do not install dependencies, do not implement features.
+4. Ask me to review the spec before any build.
 ```
 
 ---
 
-## Step 3 — Review the Generated Files
+### Step 3 — Review gate (you, before build)
 
-Go through the generated files. You are editing, not writing.
+This gate is required. Do not skip it and do not let the agent start `src/` until you say the spec is accepted.
 
 **Must review:**
-- `ai-context/01-product.md` — Check the feature list is complete and correct
-- `ai-context/07-ui-system.md` — Adjust colors, fonts, and tone to match your vision
-- `spec/features/` — Verify acceptance criteria match what you actually want
-- `spec/progress.md` — Confirm the feature list is the right scope
 
-**Quick edits only:**
-- `ai-context/02-tech-stack.md` — Swap out any library versions that are wrong
-- `ai-context/05-api-contract.md` — Add or rename endpoints if needed
+- `ai-context/01-product.md` — feature list and non-goals
+- Design tokens (`07-ui-system.md` or the UI section inside `06-coding-standards.md` in lite)
+- `spec/features/` — each acceptance line is a command you are willing to run
+- `spec/progress.md` — scope and commands match the features
 
-**Usually fine as-is:**
-- `ai-context/03-architecture.md`
-- `ai-context/06-coding-standards.md`
+**Quick edits:**
 
-Files marked `N/A` (like `04-database.md` for a static site) require no action — the agent will skip them automatically during build.
+- `ai-context/02-tech-stack.md` — versions and libraries
+- `ai-context/05-api-contract.md` — names and shapes (full mode)
+
+**Usually fine as-is:** architecture and coding-standards (full mode).
+
+Reply to the agent with what to change, or: `Spec accepted. Continue to src/ structure.`
 
 ---
 
-## Step 4 — Bootstrap the Source Structure
+### Step 4 — Bootstrap the source structure
+
+Only after the spec is accepted:
 
 ```
-Read all files in ai-context/ in order (00 through 07).
+Spec is accepted.
 
-Generate the complete src/ folder structure for this project.
+Read AGENTS.md and the ai-context files that exist (lite: 01, 02, 06; full: 00–08). Skip N/A files.
+
+Generate the src/ folder structure.
 Create placeholder files with correct imports and empty exports.
-Follow the architecture in ai-context/03-architecture.md exactly.
-Do not implement any logic yet — structure only.
+Follow the architecture documented in context.
+Do not implement logic yet — structure only.
 ```
 
 ---
 
-## Step 5 — Build Feature by Feature
+### Step 5 — Build feature by feature
 
-For each feature in `spec/progress.md` with status `todo`:
+For each row in `spec/progress.md` with status `todo`:
 
-**5a. Implement UI (section by section):**
+**5a. UI (if the feature has UI):**
+
 ```
-Read:
-- ai-context/02-tech-stack.md
-- ai-context/06-coding-standards.md
-- ai-context/07-ui-system.md
-- spec/ui/[screen-name].md
+Read AGENTS.md and the existing ai-context files needed for UI and coding standards.
+Read spec/ui/[screen-name].md if it exists, else spec/features/[feature-name].md.
+Load the matching UI skill from .agents/skills/ (see Building UI below).
+If that skill folder is missing, stop and tell me how to install it. Do not invent one.
 
 Implement the [SECTION] section of [SCREEN].
-Handle all states: default, loading, error, empty, success.
-Mobile-first. Use only design tokens from ai-context/07-ui-system.md.
+Handle states: default, loading, error, empty, success.
+Mobile-first. Use only documented design tokens.
 Do not implement any other section yet.
 ```
 
-After each section, run:
-```
-You are the agent defined in .agents/ui-qa.md or add your SKILL
-Review src/[component-path].
-Reference: ai-context/07-ui-system.md
-Report findings grouped by: Critical / Warning / Suggestion.
-```
+After each section, verify in a real browser with Playwright MCP (see UI quality assurance below).
 
-**5b. Implement Backend:**
+**5b. Backend (if the feature has a server):**
+
 ```
-Read:
-- ai-context/03-architecture.md
-- ai-context/04-database.md
-- ai-context/05-api-contract.md
-- spec/features/[feature-name].md
+Read architecture, database, API contract, and spec/features/[feature-name].md.
 
 Implement backend for [FEATURE].
-Generate: route → service → repository → validation → error handling.
-Response shapes must match ai-context/05-api-contract.md exactly.
+Keep layer boundaries. Response shapes must match the API contract.
 ```
 
-**5c. Connect Frontend ↔ Backend:**
+**5c. Connect UI ↔ backend** when both exist.
+
+**5d. Proof — required before** `done`**:**
+
 ```
-Read ai-context/05-api-contract.md and src/[component-path].
-Wire up API calls for [FEATURE].
-Handle loading, success, and error states in the component.
-Error messages must be user-readable.
+Read spec/features/[feature-name].md.
+Run every acceptance command listed there.
+Use the finish-feature skill.
+Do not mark spec/progress.md as done unless those commands passed in this session.
+Record the exact commands and their exit codes.
 ```
 
 ---
 
-## Step 6 — Agent Reviews
+### Step 6 — Reviews
 
-Run after every completed feature:
+After a completed feature:
 
 ```
-You are the agent use code-review skill 
-Review the implementation in src/[path].
-Cross-reference: ai-context/03-architecture.md and ai-context/06-coding-standards.md.
-```
-
-Run before shipping any auth or data-handling feature:
-```
-You are the agent use security skill
+Use the code-review skill in .agents/skills/code-review/SKILL.md.
 Review src/[path].
-Focus: input validation, auth checks, data exposure, injection risks.
+Cross-reference architecture and coding-standards context files that exist.
 ```
+
+Before shipping auth or data handling, use a security skill if `.agents/skills/security/` exists, or install a stack-matched one from skills.sh. Do not invent a missing skill path.
 
 ---
 
-## Step 7 — Update Progress
+### Step 7 — Progress
 
-```
-Update spec/progress.md.
-Mark [FEATURE] as done.
-Add any notes or follow-up items.
-```
+`spec/progress.md` is a proof log, not a wish list.
+
+| Status | Meaning |
+|---|---|
+| `todo` | Not implemented, or AC command not run |
+| `blocked` | Waiting on spec change or external dependency |
+| `done` | Every acceptance command in the feature spec ran and passed |
+
+The agent must not set `done` because the code "looks finished."
 
 ---
 
-## Complete Workflow
+## Case 2 — Half-built source
+
+You already have code. Do not re-run Case 1 bootstrap as if the repo were empty.
+
+**Need:**
+
+- Skill: `onboard-codebase` (map real layout, generate `ai-context/` from the tree, do not invent architecture)
+- Skill: `characterize-tests` (wrap current behavior in tests before changing it)
+- Skill: `gap-fill` (finish missing features against new `spec/features/` with runnable AC)
+- Skill: `triage-bug` / existing `fix-bug`
+- MCP: same 4 — GitHub, context7, **codegraph** (navigation matters here), Playwright
+- CLI: test runner, `ctags` or equivalent, `semgrep` if you touch auth/input
+- Hooks: forbid stop until targeted tests pass
+
+Bootstrap in this case means **document what exists**, then spec only the gaps. Human review of that spec is still required before new build work.
+
+---
+
+## Case 3 — Finished product, then scale
+
+The product works. The job is load, deploy, observability, and cost — not greenfield features.
+
+**Need:**
+
+- Skill: `perf-scale` (baselines, budgets, load, caching, data growth)
+- Skill: `devops-readiness` (build, migrate, rollback, secrets, environments)
+- CLI first: `k6` (or the project's load tool), `trivy`, `gitleaks`, `semgrep`, existing test runner
+- MCP: keep the core 4. Add at most one **read-only** logs/metrics server. No production write tools in the default set.
+- Hooks: lint/test/scan must pass before the agent stops; deploy stays a human or CI step unless you explicitly allow it
+
+Write scale work as features with runnable AC (`k6 run ...`, SLO checks), and mark `progress.md` `done` only when those commands pass.
+
+---
+
+## Complete Case 1 flow
 
 ```
-Write idea.md
+Write idea.md (optionally: "use lite context")
       ↓
-Bootstrap prompt → agent writes all .md files
+Bootstrap → context + spec with runnable AC
       ↓
-Review + edit generated files (not write from scratch)
+YOU review spec (hard gate)
       ↓
 Bootstrap src/ structure
       ↓
 For each feature:
-  UI section → ui-qa review → next section
-  Backend → reviewer review
-  Connect frontend ↔ backend
+  implement
+  run acceptance commands
+  code-review
+  UI: Playwright MCP in a real browser
       ↓
-Security review (auth/data features)
-      ↓
-Update spec/progress.md
-      ↓
-Next feature
+finish-feature → progress.md done only if acceptance commands passed
 ```
 
 ---
 
 ## N/A Bypass
 
-Files that do not apply to your project are automatically written as `N/A` by the bootstrap agent.
+Files that do not apply are written as `N/A`. Agents skip them. In lite mode, missing numbers (00, 03–05, 07–08) are intentional — do not recreate them unless you switch to full.
 
-The `copilot-instructions.md` tells Copilot to skip those files silently during build. You never need to delete them or modify them.
+Examples:
 
-Examples of N/A files:
-- Static site → `04-database.md` and `05-api-contract.md` are N/A
-- No auth → security agent skips auth sections automatically
-- API-only project → `07-ui-system.md` is N/A
+- Static site → no database/API files, or those files are N/A
+- API-only → no UI system file (full) / no UI tokens in `06` (lite)
+
+---
+
+## Building UI
+
+Pick **one** skill for the surface you are building. Load `.agents/skills/<name>/SKILL.md` only if that folder exists. If it is missing, install it first — do not create an empty folder.
+
+| When | Skill | Path |
+|---|---|---|
+| Impressive landing page, marketing site, or a clear new art direction | Taste Skill | `.agents/skills/design-taste-frontend/` (ships in this repo) |
+| Large product, team work, screens that must stay clean, consistent, and professional; also for direction, review, and polish during development | Impeccable | `.agents/skills/impeccable/` (ships in this repo) |
+| Web app, dashboard, SaaS, or admin panel — design system and UI/UX patterns | UI UX Pro Max | not shipped; install before use |
+
+```bash
+# Taste Skill (already present as design-taste-frontend)
+npx skills add https://github.com/Leonxlnx/taste-skill --skill "design-taste-frontend"
+
+# Impeccable (already present)
+npx skills add pbakaus/impeccable
+
+# UI UX Pro Max (optional)
+npx skills add https://github.com/nextlevelbuilder/ui-ux-pro-max-skill --skill ui-ux-pro-max
+```
+
+---
+
+## UI quality assurance
+
+Recommended method: your coding agent plus Microsoft Playwright MCP.
+
+https://github.com/microsoft/playwright-mcp
+
+1. Start the app.
+2. Ask the agent to open the screen, click through the real user flow, and check empty, error, and loading states.
+3. Compare the running UI to `spec/ui/` or `spec/features/`.
+4. Run the `code-review` skill. A single screenshot is not proof.
+
+Claude Code:
+
+```bash
+claude mcp add playwright npx @playwright/mcp@latest
+```
+
+Other agents: copy the `playwright` server from `.vscode/mcp.json` into the MCP config your agent loads.
+
+---
+
+## Adding Skills
+
+Skills are procedures. They install into `.agents/skills/<name>/`.
+
+See `.agents/README.md` for the task-to-skill map.
+
+Optional extras for web and full-stack work:
+
+```bash
+npx skills add vercel-labs/agent-skills
+npx skills add shadcn/ui
+npx skills add vercel-labs/next-skills
+npx skills add better-auth/skills
+npx skills add supabase/agent-skills
+```
+
+Anthropic publishes a public skill set (examples, documents, skill-creator). Install only if you need those workflows:
+
+https://github.com/anthropics/skills/
+
+```bash
+npx skills add anthropics/skills
+```
+
+Browse more: https://www.skills.sh
+
+---
+
+## Configuring MCP
+
+Use a **short** list. Copy servers from `.vscode/mcp.json` into the config file your agent actually loads.
+
+**Core (stay at 4–5):**
+
+- **context7** — live library docs; do not rely on training data for APIs
+- **github** — issues, PRs, repo search
+- **playwright** — UI flows and screenshots (dev server must be running)
+- **codegraph** — navigation in non-trivial codebases ([install](https://github.com/colbymchenry/codegraph))
+
+**Prefer CLI instead of extra MCP:** tests, lint, gitleaks, semgrep, trivy, k6.
+
+**Case 3 only:** one extra MCP for read-only logs/metrics, if you have no CLI for that data.
+
+Do not add filesystem MCP if the agent already reads the workspace. Do not add chrome-devtools, markitdown, sequential-thinking, or similar unless you delete something else to stay at 4–5.
 
 ---
 
 ## Getting Started
 
-1. Clone or fork this repo into your project folder
-2. Open the folder in VSCode
-3. Create `idea.md` and describe your project
-4. Open Copilot Chat and paste the Step 2 bootstrap prompt
-5. Review the generated files
-6. Follow steps 4–7 to build
+1. Clone or fork this repo
+2. Open it in your coding agent (any editor)
+3. Create `idea.md`
+4. Paste the Step 2 bootstrap prompt
+5. Review the spec; only then continue to steps 4–7
 
 ---
-
-## Adding Skills (skills.sh)
-
-Skills are reusable procedural knowledge files. Install them once, and Copilot reads the relevant skill before each matching task automatically.
-
-```bash
-# Install skills for your stack — run from project root
-npx skills add vercel-labs/agent-skills        # React + Vercel best practices
-npx skills add shadcn/ui                        # shadcn/ui component patterns
-npx skills add vercel-labs/next-skills         # Next.js best practices
-npx skills add leonxlnx/taste-skill           # High-end visual design
-npx skills add better-auth/skills             # Auth patterns
-npx skills add supabase/agent-skills          # Supabase + Postgres
-npx skills add mattpocock/skills              # Debugging + architecture
-npx skills add pbakaus/impeccable             # UI polish and audit
-```
-
-Browse all skills: https://www.skills.sh
-
-Skills are placed in `skills/`. See `skills/README.md` for the full list of task-to-skill mappings.
-
----
-
-## Configuring MCP Servers
-
-`.vscode/mcp.json` is pre-configured with multiple MCP servers. Most are zero-config and work immediately after installation.
-
----
-
-### Core MCP Servers
-
-**context7** — auto-fetches live docs for any library before Copilot writes library-specific code. This eliminates the most common class of vibe coding bugs (wrong API shapes, deprecated patterns, version mismatches).
-
-**playwright** — browser automation for screenshots, user-flow testing, responsive testing, and UI verification. Run `npm run dev`, then ask Copilot to test flows or capture screenshots.
-
-**github** — repository intelligence and GitHub workflow automation. Can search code, create issues, open PRs, review commits, and inspect repositories directly from the agent.
-
-**filesystem** — high-speed workspace read/write access. Useful for bootstrap generation, scanning codebases, and batch file operations.
-
----
-
-### Advanced MCP Servers
-
-**chrome-devtools** — deep browser debugging through Chrome DevTools Protocol. Lets the agent inspect console logs, network requests, performance traces, DOM state, and runtime issues directly from the browser.
-
-Use it when:
-- Debugging frontend runtime errors
-- Investigating hydration mismatches
-- Inspecting failed API/network calls
-- Profiling performance bottlenecks
-- Monitoring memory leaks or render loops
-
----
-
-**markitdown** — converts documents into clean markdown for AI processing. Supports PDF, DOCX, PPTX, HTML, CSV, and more.
-
-Useful for:
-- RAG ingestion
-- Converting specs/docs into markdown
-- Processing exported reports
-- AI-readable documentation pipelines
-
-STDIO mode:
-```bash
-markitdown-mcp
-```
-
----
-
-**codegraph** — semantic code search and impact analysis for the entire codebase.
-
-Lets the agent:
-- Search for functions, components, types by meaning (not just keywords)
-- Trace caller/callee chains to understand impact
-- Build context automatically when implementing features
-- Discover existing patterns and reusable code
-
-Install CodeGraph [Click](https://github.com/colbymchenry/codegraph) and connect it as an MCP server for powerful codebase understanding.
-
-Use it when:
-- Implementing a new feature (agent scans for existing patterns)
-- Refactoring code (understand full impact)
-- Debugging (trace who calls what)
-- Learning the codebase
 
 ## Contributing
 
-Contributions are welcome. Please open an issue or PR to suggest improvements to the workflow or documentation.
+Contributions are welcome. Open an issue or PR for workflow or documentation improvements.
 
 ---
 
 ## Support
 
-For questions or issues:
-- Check the README and each `.md` file thoroughly
+- Read this README and `AGENTS.md`
 - Open a [GitHub Issue](https://github.com/dui14/vibe-coding-workflow/issues)
-- Read the full documentation in each `ai-context/` file
+
+---
+
+## License
+
+This project is licensed under the MIT License. See `LICENSE`. Copyright (c) 2026 KHANG LUONG.
